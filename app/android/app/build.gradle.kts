@@ -71,7 +71,7 @@ android {
         multiDexEnabled = true
         versionCode = flutter.versionCode()
         versionName = flutter.versionName()
-        resValue("string", "app_name", dartDefines["appName"] ?: "EQMonitor")
+        resValue("string", "app_name", dartDefines["appName"] ?: "")
     }
 
     signingConfigs {
