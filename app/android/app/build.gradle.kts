@@ -2,6 +2,8 @@ import java.util.Properties
 import java.io.FileInputStream
 import java.util.Base64
 
+const val DEFAULT_APP_NAME = "EQMonitor"
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -64,12 +66,12 @@ android {
         dartDefines["appIdSuffix"]?.let {
             applicationIdSuffix = it
         }
-        minSdkVersion(26)
-        targetSdkVersion(35)
+        minSdk = 26
+        targetSdk = 35
         multiDexEnabled = true
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        resValue("string", "app_name", dartDefines["appName"] ?: "EQMonitor")
+        resValue("string", "app_name", dartDefines["appName"] ?: DEFAULT_APP_NAME)
     }
 
     signingConfigs {
@@ -87,7 +89,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             multiDexEnabled = true
-            resValue("string", "app_name", "EQMonitor")
+            resValue("string", "app_name", DEFAULT_APP_NAME)
         }
         debug {
             versionNameSuffix = ".d"
