@@ -64,12 +64,12 @@ android {
         dartDefines["appIdSuffix"]?.let {
             applicationIdSuffix = it
         }
-        minSdk = 26
-        targetSdk = 35
+        minSdkVersion(26)
+        targetSdkVersion(35)
         multiDexEnabled = true
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        resValue("string", "app_name", dartDefines["appName"] ?: "")
+        resValue("string", "app_name", dartDefines["appName"] ?: "EQMonitor")
     }
 
     signingConfigs {
