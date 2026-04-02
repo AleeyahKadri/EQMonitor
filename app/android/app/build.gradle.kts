@@ -32,14 +32,18 @@ val dartDefines: Map<String, String> =
     }
 
 tasks.register<Copy>("copySources") {
-    from("src/${dartDefines["flavor"]}/res")
+    dartDefines["flavor"]?.let { flavor ->
+        from("src/$flavor/res")
+    }
     into("src/main/res")
 }
 
-tasks.whenTaskAdded {
-    if (name != "copySources") {
-        dependsOn("copySources")
-    }
+tasks.matching { task ->
+    task.name == "preBuild" ||
+        (task.name.startsWith("merge") &&
+            task.name.endsWith("Resources"))
+}.configureEach {
+    dependsOn("copySources")
 }
 
 val keystoreProperties = Properties()
