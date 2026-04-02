@@ -7,32 +7,36 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-val dartDefines =
-    mutableMapOf<String, String>()
-if (project.hasProperty("dart-defines")) {
-    project.property("dart-defines")
-        .toString()
-        .split(",")
-        .forEach { entry ->
-            val decoded =
-                String(
-                    Base64.getDecoder()
-                        .decode(entry),
-                    Charsets.UTF_8,
-                )
-            val pair = decoded.split("=", limit = 2)
-            if (pair.size == 2) {
-                dartDefines[pair.first()] = pair.last()
+val dartDefines: Map<String, String> =
+    if (project.hasProperty("dart-defines")) {
+        project.property("dart-defines")
+            .toString()
+            .split(",")
+            .mapNotNull { entry ->
+                val decoded =
+                    String(
+                        Base64.getDecoder()
+                            .decode(entry),
+                        Charsets.UTF_8,
+                    )
+                val pair = decoded.split("=", limit = 2)
+                if (pair.size == 2) {
+                    pair.first() to pair.last()
+                } else {
+                    null
+                }
             }
-        }
-}
+            .toMap()
+    } else {
+        emptyMap()
+    }
 
 tasks.register<Copy>("copySources") {
     from("src/${dartDefines["flavor"]}/res")
     into("src/main/res")
 }
 
-tasks.configureEach {
+tasks.whenTaskAdded {
     if (name != "copySources") {
         dependsOn("copySources")
     }
@@ -79,7 +83,7 @@ android {
         resValue(
             "string",
             "app_name",
-            dartDefines["appName"].toString(),
+            dartDefines["appName"] ?: "",
         )
     }
 
