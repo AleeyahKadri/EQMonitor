@@ -32,17 +32,17 @@ val dartDefines: Map<String, String> =
     }
 
 tasks.register<Copy>("copySources") {
+    onlyIf { dartDefines["flavor"] != null }
     dartDefines["flavor"]?.let { flavor ->
         from("src/$flavor/res")
     }
     into("src/main/res")
 }
 
-tasks.matching { task ->
-    task.name == "preBuild" ||
-        (task.name.startsWith("merge") &&
-            task.name.endsWith("Resources"))
-}.configureEach {
+tasks.whenTaskAdded {
+    if (name == "copySources") {
+        return@whenTaskAdded
+    }
     dependsOn("copySources")
 }
 
