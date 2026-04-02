@@ -33,12 +33,9 @@ val dartDefines: Map<String, String> =
 
 tasks.register<Copy>("copySources") {
     val flavor = dartDefines["flavor"]
-    if (flavor != null) {
-        from("src/$flavor/res")
-        into("src/main/res")
-    } else {
-        enabled = false
-    }
+    onlyIf { flavor != null }
+    from("src/$flavor/res")
+    into("src/main/res")
 }
 
 tasks.matching {
@@ -88,7 +85,7 @@ android {
         resValue(
             "string",
             "app_name",
-            dartDefines["appName"] ?: "",
+            dartDefines["appName"] ?: "EQMonitor",
         )
     }
 
